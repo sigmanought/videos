@@ -22,6 +22,6 @@ To run a manim file:
     You may also need to install [cairo](https://pycairo.readthedocs.io/en/latest/getting_started.html) and [manim](https://docs.manim.community/en/stable/installation.html). 
 2. Run the desired class ``manim -p -ql example.py SquareToCircle``
 
-Scripts that contain *opengl* in their name, are rendered via
-``manim ./example.py --renderer=opengl --format=mp4``.
+Scripts that contain *opengl* in their name, are rendered via \
+``manim ./example.py --renderer=opengl --format=mp4``. \
 To render with higher resolution use ``-qh`` (high quality) or ``-qk`` (4k).
