@@ -10,7 +10,7 @@ In this video we'll explore why SAR uses different wavelengths.
 
 We'll look at the applications for different bands and on which objects the bands reflect particularly well. Of course, we'll be looking at a beautiful real-world SAR image for each group of bands!
 
-In the end, we'll also find out the (alleged) history behind the names of the SAR bands. Whether fact or urban legend, the stories are useful for remembering the cryptic bands names.
+Finally, we'll also explore the history behind the names of the SAR bands. Whether fact or urban legend, the stories are useful for remembering the cryptic bands names.
 
 # Setup
 To run a manim file:
