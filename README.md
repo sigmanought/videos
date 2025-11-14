@@ -8,3 +8,16 @@ All contents are available under the [Creative Commons Attribution-NonCommercial
 # 01 Why does SAR use different wavelengths? | SAR bands explained
 
 
+# Setup
+To run a manim file:
+1. Activate the environment
+    Install uv: ``curl -LsSf https://astral.sh/uv/install.sh | sh`` \
+    Install dependencies: ``uv sync`` \
+    Install repository as package ``uv pip install -e .`` \
+    Activate: ``source .venv/bin/activate`` \
+    You may also need to install [cairo](https://pycairo.readthedocs.io/en/latest/getting_started.html). \
+2. Run the desired class ``manim -p -ql example.py SquareToCircle``
+
+Scripts that contain *opengl* in their name, are rendered via
+``manim ./example.py --renderer=opengl --format=mp4``.
+To render with higher resolution use ``-qh`` (high quality) or ``-qk`` (4k).
