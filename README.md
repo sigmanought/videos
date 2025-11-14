@@ -19,7 +19,7 @@ To run a manim file:
     Install dependencies: ``uv sync`` \
     Install repository as package ``uv pip install -e .`` \
     Activate: ``source .venv/bin/activate`` \
-    You may also need to install [cairo](https://pycairo.readthedocs.io/en/latest/getting_started.html). \
+    You may also need to install [cairo](https://pycairo.readthedocs.io/en/latest/getting_started.html) and [manim](https://docs.manim.community/en/stable/installation.html). 
 2. Run the desired class ``manim -p -ql example.py SquareToCircle``
 
 Scripts that contain *opengl* in their name, are rendered via
