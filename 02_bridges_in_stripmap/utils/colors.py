@@ -1,0 +1,16 @@
+from manim import *
+
+LIGHT_BEIGE = ManimColor("#e8dfcc")
+INTERNATIONAL_ORANGE = ManimColor("#F04A00")
+WASHED_BROWN = ManimColor("#746458")
+DARK_RED = ManimColor("#8D2C00")
+TEXT_COLOR = BLACK
+SOURCE_COLOR = ManimColor("#746458")
+SOURCE_COLOR_DARK = ManimColor("#706054")
+COLOR_SB = ManimColor("#4D80FF")
+COLOR_DB = ManimColor("#FFA600")
+COLOR_FAKE_DB = PURPLE
+COLOR_TB = ManimColor("#009900")
+DARK_BLUE = ManimColor("#132c54")
+SOURCE_FONT_SIZE = 50
+SOURCE_SCALE = 0.3
