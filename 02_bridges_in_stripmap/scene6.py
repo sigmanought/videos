@@ -1,15 +1,164 @@
-from manim import *
 import numpy as np
-from utils.objects import Globe, Clock, Car
-from utils.sat import MeshReflectorSat
+from manim import *
 from scipy.constants import speed_of_light
+from utils.colors import *
+from utils.decoration import create_shadow
+from utils.objects import Car, Clock, Globe
+from utils.sat import MeshReflectorSat
 
-LIGHT_BEIGE = ManimColor("#e8dfcc")
-SOURCE_FONT_SIZE = 50
-SOURCE_SCALE = 0.3
 fast = 1
-COLOR_ADJ = RED # triangle colors
+COLOR_ADJ = RED
 COLOR_OPP = ManimColor("#449c85")
+# Replace this with the actual image
+FILES_DIR = "./02_bridges_in_stripmap/pngs/"
+SAR_IMAGE_PATH = f"{FILES_DIR}/placeholder.png"
+
+
+class Scene6_p0(MovingCameraScene):
+    def construct(self):
+        self.camera.background_color = "#e6d8bc"
+        sar_image = ImageMobject(SAR_IMAGE_PATH).scale(2)
+        scale_width = 1.2
+        scale_height = 1.2
+        sar_image.stretch_to_fit_width(10 * scale_width)
+        sar_image.stretch_to_fit_height(
+            2.78 * scale_height
+        )  # aspect ratio 3.6 (-> 10/3.6 = 2.78)
+
+        sar_source = (
+            Text(
+                "Image source: Capella Space, CC BY 4.0 (creativecommons.org/licenses/by/4.0/)",
+                font_size=SOURCE_FONT_SIZE,
+                font="Zalando Sans",
+            )
+            .set_color(SOURCE_COLOR)
+            .scale(SOURCE_SCALE)
+        )
+        sar_source.to_corner(DL, buff=0.2)
+
+        grid = Rectangle(
+            width=10 * scale_width,
+            height=2.78 * scale_height,
+            grid_xstep=0.3,
+            grid_ystep=0.3,
+            stroke_color=WHITE,
+            stroke_width=0.03,
+            fill_opacity=0,
+        )
+
+        sar_shadow = create_shadow(
+            sar_image, layers=20, scale_factor=1.1, max_opacity=0.1
+        )
+        # 00:20
+        self.play(FadeIn(sar_shadow, sar_image, sar_source), run_time=fast * 1)
+
+        arrow_origin = sar_image.get_corner(UP + LEFT) + (0.7 * UP + 0.7 * LEFT)
+        down_factor = 4.5
+        left_factor = 5
+
+        arrow_up = Arrow(
+            start=arrow_origin,
+            end=arrow_origin + DOWN * down_factor,
+            stroke_color=BLACK,
+            stroke_width=3,
+            tip_length=0.2,
+            buff=0,
+        )
+
+        arrow_right = Arrow(
+            start=arrow_origin,
+            end=arrow_origin + RIGHT * left_factor,
+            stroke_color=BLACK,
+            stroke_width=3,
+            tip_length=0.2,
+            buff=0,
+        )
+
+        self.wait(3)
+        self.play(FadeIn(grid))
+        self.wait(1)
+
+        # Calculate number of boxes
+        num_cols = int(10 * scale_width / 0.3)
+        num_rows = int(2.9 * scale_height / 0.3)
+
+        # Create individual filled boxes with gradient
+        boxes = []
+        total_boxes = num_rows * num_cols
+
+        # Create individual filled boxes
+        box_index = 0
+        boxes = []
+        for col in range(num_cols):
+            for row in reversed(range(num_rows)):
+                # Calculate progress (0 to 1)
+                progress = box_index / (total_boxes - 1)
+                box_index += 1
+
+                # Interpolate color from RED to BLUE
+                box_color = interpolate_color(RED, BLUE, progress)
+                box = Rectangle(
+                    width=0.31,
+                    height=0.31,
+                    stroke_width=0,
+                    fill_color=box_color,  # Choose your color
+                    fill_opacity=0.5,
+                )
+                # Position the box
+                # Position the box
+                x_pos = grid.get_left()[0] - 0.005 + 0.15 + col * 0.3
+                y_pos = grid.get_bottom()[1] + 0.15 + row * 0.304
+                box.move_to([x_pos, y_pos, 0])
+                boxes.append(box)
+
+        text_azimuth = (
+            Text(
+                "Azimuth", font="Zalando Sans", font_size=SOURCE_FONT_SIZE, color=BLACK
+            )
+            .move_to(arrow_right.get_end() + 1 * RIGHT)
+            .scale(SOURCE_SCALE * 2)
+        )
+        text_range = (
+            Text("Range", font="Zalando Sans", font_size=SOURCE_FONT_SIZE, color=BLACK)
+            .move_to(arrow_up.get_end() + 0.4 * DOWN)
+            .scale(SOURCE_SCALE * 2)
+        )
+
+        arrow_up = Arrow(
+            start=arrow_origin,
+            end=arrow_origin + DOWN * down_factor,
+            stroke_color=BLACK,
+            stroke_width=3,
+            tip_length=0.2,
+            buff=0,
+        )
+
+        arrow_up.shift(0.1 * DOWN + 0.4 * RIGHT)
+        text_range.shift(0.1 * DOWN + 0.4 * RIGHT)
+        arrow_right.shift(0.1 * DOWN + 0.4 * RIGHT)
+        text_azimuth.shift(0.1 * DOWN + 0.4 * RIGHT)
+        self.wait(3)
+        self.play(
+            FadeIn(arrow_right, arrow_up, text_azimuth, text_range, text_azimuth),
+            run_time=1,
+        )
+        self.wait(1)
+        row_indices = [3, 1, 8, 5]
+
+        for i, row_index in enumerate(row_indices):
+            row_copy = [
+                box.copy().set_fill(opacity=0.8).set_color(RED).shift(0.01 * UP)
+                for box in [
+                    boxes[col * num_rows + row_index] for col in range(num_cols)
+                ]
+            ]
+            self.play(FadeIn(*row_copy))
+            self.wait(0.5)
+            if i < len(row_indices) - 1:
+                self.play(FadeOut(*row_copy))
+
+        self.wait(1)
+        self.play(FadeOut(*self.mobjects.copy()))
 
 
 class Scene6_p1(MovingCameraScene):
@@ -1102,7 +1251,6 @@ class Scene6_p1(MovingCameraScene):
         self.play(Succession(Write(travel_path_length)), run_time=fast * 1)
         self.wait(2)
 
-
         self.wait(3)
         self.play(
             TransformMatchingShapes(travel_path_length, travel_path_with_factor1),
@@ -1119,7 +1267,6 @@ class Scene6_p1(MovingCameraScene):
         )
         travel_path_length = travel_path_with_factor2
         self.wait(1)
-
 
         self.wait(0.5)
         self.play(
@@ -1292,3 +1439,109 @@ class Scene6_p1(MovingCameraScene):
             scatterer_locations.append(scatterer_location2)
 
         self.play(FadeOut(Group(*self.mobjects)))
+
+
+class Scene6_p2(MovingCameraScene):
+    def construct(self):
+        self.camera.background_color = "#e6d8bc"
+        img_raw = ImageMobject(SAR_IMAGE_PATH).scale(0.4)
+        img_processed = ImageMobject(SAR_IMAGE_PATH).scale(0.4)
+        img_raw.stretch_to_fit_width(img_processed.width)
+        img_raw.stretch_to_fit_height(img_processed.height)
+
+        # Move to center
+        img_raw.to_edge(LEFT).shift(RIGHT * 0.45 + 0.25 * DOWN)
+        img_processed.to_edge(RIGHT).shift(LEFT * 0.45 + 0.25 * DOWN)
+
+        img_source = (
+            Text(
+                "Image source: Capella Space, CC BY 4.0 (creativecommons.org/licenses/by/4.0/)",
+                font_size=SOURCE_FONT_SIZE,
+                font="Zalando Sans",
+            )
+            .set_color(SOURCE_COLOR)
+            .scale(SOURCE_SCALE)
+        )
+
+        raw_label = (
+            VGroup(
+                Text(
+                    "Slow Time vs.",
+                    font="Zalando Sans SemiExpanded",
+                    font_size=SOURCE_FONT_SIZE,
+                )
+                .set_color(TEXT_COLOR)
+                .set_stroke(TEXT_COLOR),
+                MathTex(r"\Delta", font_size=SOURCE_FONT_SIZE)
+                .set_color(TEXT_COLOR)
+                .set_stroke(TEXT_COLOR),
+                Text(
+                    "TOA", font="Zalando Sans SemiExpanded", font_size=SOURCE_FONT_SIZE
+                )
+                .set_color(TEXT_COLOR)
+                .set_stroke(TEXT_COLOR),
+            )
+            .scale(0.6)
+            .arrange(RIGHT, buff=0.15)
+            .next_to(img_raw, UP)
+        )
+        processed_label = (
+            Text(
+                "Zero Doppler Coordinates",
+                font="Zalando Sans SemiExpanded",
+                font_size=SOURCE_FONT_SIZE,
+            )
+            .scale(0.6)
+            .next_to(img_processed, UP)
+            .set_color(TEXT_COLOR)
+        )
+        img_source.to_corner(DL).shift(0.1 * DOWN)
+        self.camera.frame.add(img_source)
+
+        # Create a slightly bigger black rectangle as shadow/backdrop
+        raw_shadow = create_shadow(
+            img_raw, layers=20, scale_factor=1.1, max_opacity=0.1
+        )
+        processed_shadow = create_shadow(
+            img_processed,
+            layers=20,
+            scale_factor=1.1,
+            max_opacity=0.05,
+            slant=0.2,
+            rotate=0.5,
+        ).shift(0.05 * DOWN)
+        raw_label.align_to(processed_label, UP)
+
+        self.play(
+            FadeIn(raw_shadow, img_raw, img_processed, img_source, processed_shadow)
+        )
+        self.wait(1)
+        self.play(FadeIn(raw_label))
+        self.play(FadeIn(processed_label))
+        self.wait(2)
+        self.camera.frame.save_state()
+        left_group = Group(img_raw, raw_label)
+        right_group = Group(img_processed, processed_label)
+        self.play(
+            self.camera.frame.animate.move_to(left_group).set(
+                width=left_group.width * 1.9
+            ),
+            run_time=2,
+        )
+
+        self.wait(2)
+        self.play(self.camera.frame.animate.move_to(right_group), run_time=2)
+        self.wait(1)
+        self.play(Restore(self.camera.frame), run_time=2)
+        self.wait(2)
+        self.play(
+            FadeOut(
+                raw_label,
+                processed_label,
+                raw_shadow,
+                img_raw,
+                img_processed,
+                img_source,
+                processed_shadow,
+            )
+        )
