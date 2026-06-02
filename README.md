@@ -12,6 +12,12 @@ We'll look at the applications for different bands and on which objects the band
 
 Finally, we'll also explore the history behind the names of the SAR bands. Whether fact or urban legend, the stories are useful for remembering the cryptic bands names.
 
+# 02 - Why SAR images live in time, not space | Stripmap Explained
+In this video, we'll break down why bridges in stripmap images produce three reflections, using a beautiful example of the Golden Gate bridge in San Francisco.
+
+These peculiar reflections stem from SAR images living in time rather than space. We explore how signals are assigned to their range and azimuth position, and how we can use the reflections to compute the clearance of the bridge. 
+
+
 # Setup
 To run a manim file:
 1. Activate the environment
@@ -20,7 +26,7 @@ To run a manim file:
     Install repository as package ``uv pip install -e .`` \
     Activate: ``source .venv/bin/activate`` \
     You may also need to install [cairo](https://pycairo.readthedocs.io/en/latest/getting_started.html) and [manim](https://docs.manim.community/en/stable/installation.html). 
-2. Run the desired class ``manim -p -ql example.py SquareToCircle``
+2. Run the desired class ``manim -p -ql examp le.py SquareToCircle``
 
 Scripts that contain *opengl* in their name, are rendered via \
 ``manim ./example.py --renderer=opengl --format=mp4``. \
